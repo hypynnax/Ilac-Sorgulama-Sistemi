@@ -1,0 +1,105 @@
+           ŞABLON
+				    Tablo Adı
+Alan Adları | Alan Adları | Alan Adları | Alan Adları | Alan Adları | Alan Adları
+Tipi(int vb)| Tipi(int vb)| Tipi(int vb)| Tipi(int vb)| Tipi(int vb)| Tipi(int vb)
+----------------------------------------------------------------------------------
+
+		KULLANICI BİLGİLERİ
+KULLANICI_İD | AD | SOYAD | DOĞUM_TARİHİ | KİLO
+----------------------------------------------------------------------------------
+
+	KAN GRUBU
+KAN_GRUBU_İD | KAN_GRUBU
+    İNT      |  STRİNG
+
+----------------------------------------------------------------------------------
+
+		  KAN GRUPLARI
+KAN_GRUPLARI_İD | KULLANICI_İD | KAN_GRUBU_İD
+      İNT 	|     İNT      |      İNT
+
+----------------------------------------------------------------------------------
+
+	HASTALIK
+HASTALIK_İD | HASTALIK_ADI
+    İNT     |    STRİNG
+
+----------------------------------------------------------------------------------
+
+	     KULLANICILARIN_HASTALIKLARI
+KULLANICI_HASTALIK_İD | KULLANICI_İD | HASTALIK_İD
+        İNT           |     İNT      |     İNT
+
+----------------------------------------------------------------------------------
+
+      ALERJİLER
+ALERJİ_İD | ALERJİ_ADI
+   İNT	  |   STRİNG
+
+----------------------------------------------------------------------------------
+
+	    KULLANICI_ALERJİLERİ
+KULLANICI_ALERJİ_İD | KULLANICI_İD | ALERJİ_İD
+       İNT 	    |      İNT 	   |    İNT
+
+----------------------------------------------------------------------------------
+
+						İLAÇLAR
+İLAÇLAR_İD | İLAÇ_ADI | YAŞ_ARALIĞI | DOZU | TÜRÜ(TABLET,HAP vb) | KULLANIM PERİYODU | KULLANIMI DURUMU
+    İNT    |  STRİNG  |    STRİNG   |  İNT |       STRİNG        |     STRİNG        |      STRİNG
+
+----------------------------------------------------------------------------------
+
+	ETKEN MADDELER
+ETKEN_MADDE_İD | ETKEN_MADDE_ADI
+      İNT      |     STRİNG
+
+----------------------------------------------------------------------------------
+
+		İLAÇLARIN ETKEN MADDELERİ
+İLAÇLARIN_ETKEN_MADDELERİ_İD | İLAÇLAR_İD | ETKEN_MADDE_İD
+            İNT		     |     İNT    |      İNT
+
+----------------------------------------------------------------------------------
+
+	YAN ETKİLER
+YAN_ETKİLER_İD | YAN_ETKİLER_ADI
+      İNT      |     STRİNG
+
+----------------------------------------------------------------------------------
+
+		İLAÇLARIN YAN ETKİLERİ
+İLAÇLARIN_YAN_ETKİLERİ_İD | İLAÇLAR_İD | YAN_ETKİLER_İD
+          İNT	          |     İNT    |      İNT
+
+----------------------------------------------------------------------------------
+
+	     KULLANIM BÖLGELERİ
+KULLANIM_BÖLGELERİ_İD | KULLANIM_BÖLGELERİ_ADI
+         İNT	      |        STRİNG
+
+----------------------------------------------------------------------------------
+
+			İLAÇLARIN KULLANIM BÖLGELERİ
+İLAÇLARIN_KULLANIM_BÖLGELERİ_İD | İLAÇLAR_İD | KULLANIM_BÖLGELERİ_İD
+             İNT		|    İNT     |         İNT
+
+----------------------------------------------------------------------------------
+
+		KULLANILACAK DURUMLAR
+KULLANILACAK_DURUMLAR_İD | KULLANILACAK_DURUMLAR_ADI
+           İNT	         |           STRİNG
+
+----------------------------------------------------------------------------------
+
+			İLAÇLARIN KULLANILACAK DURUMLARI
+İLAÇLARIN_KULLANILACAK_DURUMLARI_İD | İLAÇLAR_İD | KULLANILACAK_DURUMLAR_İD
+                İNT		    |    İNT     |           İNT
+
+----------------------------------------------------------------------------------
+
+		   KULLANICILARIN_İLAÇLARI
+KULLANICI_İLAÇLARI_İD | KULLANICI_İD | İLAÇLAR_İD
+          İNT 		   |      İNT     |    İNT
+
+----------------------------------------------------------------------------------
