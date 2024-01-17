@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Quiry Site (İlaç Önerisi)</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.2-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .form-container {
+            width: 30%;
+        }
+
+        .image-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 10px;
+            background-color: #baffbe;
+            overflow: hidden;
+        }
+
+        .image-link img {
+            transition: transform 0.3s ease;
+            display: block;
+            width: auto;
+            height: 100%;
+        }
+
+        .image-link:hover img {
+            transform: scale(1.1);
+            background-color: #7eff82;
+        }
+
+        .image-link:hover {
+            background-color: #7eff82;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            transition: left 0.5s;
+            padding: 10px;
+            background-color: transparent;
+            border: 1px solid #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            cursor: pointer;
+            transition: right 0.5s;
+        }
+
+        .rotate-icon {
+            transition: transform 0.5s;
+        }
+
+        .sidebar-open .rotate-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="header d-flex justify-content-between py-3">
+                    <div class="d-flex align-items-center">
+                        <a href="/account/medicine_quiry/" class="d-flex align-items-center me-3">
+                            <img src="{% static 'medicinequirysite/img/logo.png' %}" alt="LOGO" style="height: 50px;">
+                        </a>
+                    </div>
+
+                    <div class="information">
+                        <button onclick=profile_screen() id="profile" class="btn btn-danger" style="display: none">{{ user.ad }}</button>
+                        <button onclick=login_screen() id="login" class="btn btn-secondary" style="display: none">Login</button>
+                        <button onclick=register_screen() id="register" class="btn btn-primary" style="display: none">Sign up</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="header d-flex justify-content-between py-3 align-items-center">
+                    <div class="d-flex flex-wrap ">
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Kafa')">
+                                <img src="../../static/medicinequirysite/img/body/m0.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Ön Kol')">
+                                <img src="../../static/medicinequirysite/img/body/m1.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Pazu')">
+                                <img src="../../static/medicinequirysite/img/body/m2.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Ön Omuz')">
+                                <img src="../../static/medicinequirysite/img/body/m3.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Göğüs')">
+                                <img src="../../static/medicinequirysite/img/body/m4.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Boyun')">
+                                <img src="../../static/medicinequirysite/img/body/m5.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Kasık')">
+                                <img src="../../static/medicinequirysite/img/body/m6.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Yan Kalça')">
+                                <img src="../../static/medicinequirysite/img/body/m7.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Yan Karın')">
+                                <img src="../../static/medicinequirysite/img/body/m8.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Orta Karın')">
+                                <img src="../../static/medicinequirysite/img/body/m9.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Kasık')">
+                                <img src="../../static/medicinequirysite/img/body/m10.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Üst Karın')">
+                                <img src="../../static/medicinequirysite/img/body/m11.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Yan')">
+                                <img src="../../static/medicinequirysite/img/body/m12.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Arka Omuz')">
+                                <img src="../../static/medicinequirysite/img/body/m13.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Triceps')">
+                                <img src="../../static/medicinequirysite/img/body/m14.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Bel')">
+                                <img src="../../static/medicinequirysite/img/body/m15.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Kanat')">
+                                <img src="../../static/medicinequirysite/img/body/m16.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Trapez')">
+                                <img src="../../static/medicinequirysite/img/body/m17.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Baldır')">
+                                <img src="../../static/medicinequirysite/img/body/m18.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Ön Bacak')">
+                                <img src="../../static/medicinequirysite/img/body/m19.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Arka Uyluk')">
+                                <img src="../../static/medicinequirysite/img/body/m20.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Kalça')">
+                                <img src="../../static/medicinequirysite/img/body/m21.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('İç Bacak')">
+                                <img src="../../static/medicinequirysite/img/body/m22.png" class="bolge">
+                            </a>
+                        </div>
+
+                        <div class="col-3">
+                            <a class="image-link" onclick="replaceContent('Ön Uyluk')">
+                                <img src="../../static/medicinequirysite/img/body/m23.png" class="bolge">
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="col-4 form-container bg-light rounded">
+                        <form class="p-3">
+                            <h2>Kişisel ve Tıbbi Bilgiler</h2>
+
+                            <div class="mb-3">
+                                <label for="yas" class="form-label">Yaş:</label>
+                                <input type="text" id="yas" name="yas" class="form-control" placeholder="Yaşınız"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cinsiyet" class="form-label">Cinsiyet:</label>
+                                <select id="cinsiyet" name="cinsiyet" class="form-select" required>
+                                    <option value="">Cinsiyet Seçin</option>
+                                    <option value="ERKEK">Erkek</option>
+                                    <option value="KADIN">Kadın</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="agriTuru" class="form-label">Ağrı Türü:</label>
+                                <input type="text" id="agriTuru" name="agriTuru" class="form-control" placeholder="Ağrı türünüz (örn. mide bulantısı)" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="agriBolgesi" class="form-label">Ağrıyan Bölgeniz:</label>
+                                <input type="text" id="agriBolgesi" name="agriBolgesi" class="form-control" placeholder="Ağrıyan bölgenizi resimlerden seçiniz" required>
+                            </div>
+
+                            <button type="button" onclick="submitForm()" class="btn btn-primary">İlaç Sorgula</button>
+                        </form>
+                        <button class="toggle-btn" id="toggleBtn" onclick="toggleNav()">
+                <i class="fas fa-arrow-left rotate-icon"></i>
+            </button>
+
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+                <div class="sidebar-content">
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap and custom scripts -->
+    <script src="{% static 'bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        window.onload = function () {
+            var profile_button = document.getElementById('profile');
+            var login_button = document.getElementById('login');
+            var register_button = document.getElementById('register');
+            if (profile_button.innerText == "") {
+                profile_button.style.display = 'none';
+                login_button.style.display = 'inline';
+                register_button.style.display = 'inline';
+            }else {
+                profile_button.style.display = 'inline';
+                login_button.style.display = 'none';
+                register_button.style.display = 'none';
+            }
+        };
+
+        function submitForm() {
+            var veri = {yas:document.getElementById('yas').value, cinsiyet:document.getElementById('cinsiyet').value, agri:document.getElementById('agriTuru').value,}
+
+            $.ajax({
+                url: "/account/medication/",
+                method: "POST",
+                dataType: "json",
+                data: JSON.stringify(veri),
+                success: function (response) {
+                    var medicine = response.medicine;
+
+                    var sidebar = $('.sidebar-content');
+                    sidebar.empty();
+
+                    var box = '<div className="card h-100 box" style="background-color: #111; margin: 20px;" onClick="open_box(this)">'+
+                        `<img src="{% static 'medicinequirysite/img/medicine/' %}${ medicine.turu }.png" className="card-img-top" style="color: white; height: 400px; width: 550px;" alt="İLAÇ RESİMİ">`+
+                        '<div className="card-body">'+
+                            `<p className="card-title" style="color: white"><strong>İlaç Adı : </strong>${ medicine.ilac_adi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Etken Madde : </strong>${ medicine.etkin_madde_adi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Firma Adı : </strong>${ medicine.firma_adi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Reçete Türü : </strong>${ medicine.recete_turu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Üretim Yeri : </strong><img src="{% static 'medicinequirysite/img/flags/' %}${ medicine.ithal_imal }" style="height: 30px; width: 30px;" alt="üretim yeri"></p>`+
+                            `<p className="card-text" style="color: white"><strong>Fiyat : </strong>${ medicine.fiyat }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Yaş Aralığı : </strong>${ medicine.yas_araligi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Cinsiyet : </strong>${ medicine.cinsiyet }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Dozu : </strong>${ medicine.dozu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Türü : </strong>${ medicine.turu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Kullanım Periyodu : </strong>${ medicine.kullanim_periyodu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Kullanılacak Durumlar : </strong><br>${ medicine.kullanimi_durumu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Nasıl Kullanılır : </strong><br>${ medicine.nasil_kullanilir }</p>`+
+                        '</div>'+
+                    '</div>';
+
+                    sidebar.append(box);
+                    toggleNav();
+                },
+                error: function (error) {
+                    console.error("Veri alınamadı:", error);
+                },
+            });
+        }
+
+        function profile_screen() {
+            window.location.href = '/account/profile/'
+        }
+
+        function login_screen() {
+            window.location.href = '/account/login/'
+        }
+
+        function register_screen() {
+            window.location.href = '/account/register/'
+        }
+
+        function replaceContent(painType) {
+            document.getElementById('agriBolgesi').value = painType;
+        }
+
+        function toggleNav() {
+            var sidebar = document.getElementById("mySidebar");
+            var toggleBtn = document.getElementById("toggleBtn");
+
+            if (sidebar.style.width === '450px') {
+                sidebar.style.width = '0';
+                toggleBtn.style.right = '15px';
+                toggleBtn.classList.remove('sidebar-open');
+            } else {
+                sidebar.style.width = '450px';
+                toggleBtn.style.right = '465px';
+                toggleBtn.classList.add('sidebar-open');
+            }
+        }
+
+        window.onclick = function (event) {
+            var sidebar = document.getElementById("mySidebar");
+            if (event.target === sidebar) {
+                toggleNav();
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.2-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+    <div class="page container">
+        <div class="header d-flex justify-content-between py-3">
+            <!-- Logo and Side Menu Items in one flex container -->
+            <div class="d-flex align-items-center">
+                <a href="/account/medicine_quiry/" class="d-flex align-items-center me-3">
+                    <img src="{% static 'medicinequirysite/img/logo.png' %}" alt="LOGO" style="height: 50px;">
+                </a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="login-form bg-light mt-5 p-4 border rounded">
+                        <form method="post" class="row g-3">
+                            {% csrf_token %}
+                            <h4>Welcome Back!</h4>
+                            <div class="col-12">
+                                <label>T.C. Kimlik No:</label>
+                                <input type="tcno" name="tcno" class="form-control" placeholder="T.C. Kimlik Numarası" required>
+                            </div>
+                            <div class="col-12">
+                                <label>Şifre:</label>
+                                <input type="password" name="password" class="form-control" placeholder="Şifre"
+                                    required>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary float-end">Giriş Yap</button>
+                            </div>
+                            <div class="col-12">
+                                <a onclick="openPopup()" style="cursor: pointer; color: #0d6efd; text-decoration-line: underline;">Şifremi Unuttum</a>
+                            </div>
+                        </form>
+                        <hr class="mt-4">
+                        <div class="col-12">
+                            <p class="text-center mb-0">Have not account yet? <a href="/account/register">Signup</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="overlay" style="display:none; top: 30px; right: 30px; position: absolute">
+            <div class="popup d-flex flex-column align-items-center">
+                <button class="btn btn-close" onclick="closePopup()"></button>
+                <h3>Şifremi Unuttum</h3>
+                <input type="mail" id="mail" class="form-control my-2" placeholder="E-Mail Adresiniz">
+                <h3>T.C. Kimlik</h3>
+                <input type="tcno" id="tcno" class="form-control my-2" placeholder="T.C. Kimlik Numaranız">
+                <button onclick="submitForgotPassword()" class="btn btn-primary">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        function openPopup() {
+            document.getElementById("overlay").style.display = "flex";
+        }
+
+        function closePopup() {
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        function submitForgotPassword() {
+            var data = {mail: document.getElementById('mail').value, tcno: document.getElementById('tcno').value,};
+
+            $.ajax({
+                type: 'POST',
+                url: '/account/mail/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(data),
+            })
+            alert('Yeni şifreniz e-posta adresinize gönderilmiştir.');
+            closePopup();
+        }
+    </script>
+</body>
+
+</html>

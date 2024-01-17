@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Quiry Site (İlaç Sorgula)</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.2-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .box {
+            cursor: pointer;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            transition: left 0.5s;
+            padding: 10px;
+            background-color: transparent;
+            border: 1px solid #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            cursor: pointer;
+            transition: right 0.5s;
+        }
+
+        .rotate-icon {
+            transition: transform 0.5s;
+        }
+
+        .sidebar-open .rotate-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page container">
+        <!-- Header -->
+        <div class="header d-flex justify-content-between py-3">
+            <!-- Logo and Side Menu Items in one flex container -->
+            <div class="d-flex align-items-center">
+                <a href="/account/medicine_quiry/" class="d-flex align-items-center me-3">
+                    <img src="{% static 'medicinequirysite/img/logo.png' %}" alt="LOGO" style="height: 50px;">
+                </a>
+                <a href="/account/medication_recommendation/" class="d-inline-flex" style="text-decoration: none;">
+                    <i class="fa-solid fa-person fa-3x" style="color: #BC4749;" title="İLAÇ ÖNERİ"></i>
+                </a>
+            </div>
+            <!-- Rest of the header content -->
+            <div class="information">
+                <button onclick=profile_screen() id="profile" class="btn btn-danger" style="display: none">{{ user.ad }}</button>
+                <button onclick=login_screen() id="login" class="btn btn-secondary" style="display: none">Login</button>
+                <button onclick=register_screen() id="register" class="btn btn-primary" style="display: none">Sign
+                    up</button>
+            </div>
+        </div>
+
+        <!-- Side Menu -->
+
+        <div class="search d-flex gap-2">
+            <input id="search" type="text" class="form-control" placeholder="Ara...">
+            <button onclick=search_button() class="btn btn-outline-secondary">
+                <i class="fa-solid fa-magnifying-glass" style="color: #BC4749;"></i>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container my-3">
+            <!-- Alphabet Navigation -->
+            <div class="alphabet d-flex flex-wrap mb-3 w-100">
+                {% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+                <a onclick="select_char('{{ letter }}')" class="btn btn-outline-primary me-1 mb-1">{{ letter }}</a>
+                {% endfor %}
+                <button id="temizle" class="btn btn-outline-info me-1 mb-1 ms-2">⭯</button>
+            </div>
+
+            <!-- Drug Type Selection -->
+            <div class="combobox mb-3">
+                <label for="drugTypeSelect" class="form-label">İlaç Türü</label>
+                <select id="drugTypeSelect" onchange=change_combobox(this) class="form-select">
+                    <option value="0">Bir Tür Seçin</option>
+                    <option value="Ampul">Ampül</option>
+                    <option value="Beslenme Solüsyonu">Beslenme Solüsyonu</option>
+                    <option value="Damla">Damla</option>
+                    <option value="Draje">Draje</option>
+                    <option value="Flakon">Flakon</option>
+                    <option value="Flaster">Flaster</option>
+                    <option value="Gargara">Gargara</option>
+                    <option value="Granül">Granül</option>
+                    <option value="Hazır Enjektör">Hazır Enjektör</option>
+                    <option value="Hazır Çözelti">Hazır Çözelti</option>
+                    <option value="İmplant">Implant</option>
+                    <option value="Inhaler">Inhaler</option>
+                    <option value="Jel">Jel</option>
+                    <option value="Kapsül">Kapsül</option>
+                    <option value="Kartuş">Kartuş</option>
+                    <option value="Krem">Krem</option>
+                    <option value="Kür">Kür</option>
+                    <option value="Lavman">Lavman</option>
+                    <option value="Losyon">Losyon</option>
+                    <option value="Mama">Mama</option>
+                    <option value="Merhem">Merhem</option>
+                    <option value="Nazal Sprey">Nazal Sprey</option>
+                    <option value="Oftalmik Jel">Oftalmik Jel</option>
+                    <option value="Oftalmik Merhem">Oftalmik Merhem</option>
+                    <option value="Oral Solüsyon">Oral Solüsyon</option>
+                    <option value="Oral Sprey">Oral Sprey</option>
+                    <option value="Ovul">Ovul</option>
+                    <option value="Supozituvar">Supozituvar</option>
+                    <option value="Süspansiyon">Süspansiyon</option>
+                    <option value="Şampuan">Şampuan</option>
+                    <option value="Şase">Şase</option>
+                    <option value="Şişe">Şişe</option>
+                    <option value="Şurup">Şurup</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Topikal Merhem">Topikal Merhem</option>
+                    <option value="Topikal Solüsyon">Topikal Solüsyon</option>
+                    <option value="Topikal Sprey">Topikal Sprey</option>
+                    <option value="Torba">Torba</option>
+                    <option value="Toz">Toz</option>
+                    <option value="Turbuhaler">Turbuhaler</option>
+                </select>
+            </div>
+
+            <button class="toggle-btn" id="toggleBtn" onclick="toggleNav()">
+                <i class="fas fa-arrow-left rotate-icon"></i>
+            </button>
+
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+                <div class="sidebar-content">
+                </div>
+            </div>
+
+            <!-- Cards for Medicine -->
+            <div class="row row-cols-1 row-cols-md-3 g-4" id="boxContainer">
+                {% for medicine in medicineList %}
+                <div class="col">
+                    <div class="card h-100 box" onclick="open_box(this)">
+                        <img src="{% static 'medicinequirysite/img/medicine/' %}{{ medicine.turu }}.png"
+                            class="card-img-top" alt="İLAÇ RESİMİ">
+                        <div class="card-body">
+                            <h5 class="card-title" id="medicine_name">{{ medicine.ilac_adi }}</h5>
+                            <h6 class="card-text">Etken Madde : {{ medicine.etkin_madde_adi }}</h6>
+                            <h6 class="card-text">Fiyat : {{ medicine.fiyat }}</h6>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer mt-auto py-3 bg-light">
+            <div class="footer d-flex flex-column justify-content-center align-items-center">
+                <a href="https://www.titck.gov.tr/" class="text-muted text-center">
+                    Tüm bilgiler "Türkiye İlaç ve Tıbbi Cihaz Kurumu" ve İlaç üreticilerinin resmi web sitelerinden
+                    alınmıştır.
+                </a>
+                <p class="text-muted text-center">
+                    Doktorunuza veya Eczacınıza danışmadan lütfen hiçbir ilacı tek başınıza kullanmayınız.
+                </p>
+            </div>
+        </footer>
+    </div>
+    <script src="{% static 'bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        window.onload = function () {
+            var profile_button = document.getElementById('profile');
+            var login_button = document.getElementById('login');
+            var register_button = document.getElementById('register');
+            if (profile_button.innerText == "") {
+                profile_button.style.display = 'none';
+                login_button.style.display = 'inline';
+                register_button.style.display = 'inline';
+            } else {
+                profile_button.style.display = 'inline';
+                login_button.style.display = 'none';
+                register_button.style.display = 'none';
+            }
+        };
+
+        function open_box(medicine_name) {
+            var veri = {ilac_adi: medicine_name.querySelector('#medicine_name').innerText,};
+            $.ajax({
+                url: "/account/medicine_find/",
+                method: "POST",
+                dataType: "json",
+                data: JSON.stringify(veri),
+                success: function (response) {
+                    var medicine = response.medicine;
+
+                    var sidebar = $('.sidebar-content');
+                    sidebar.empty();
+
+                    var box = '<div className="card h-100 box" style="background-color: #111; margin: 20px;">'+
+                        `<img src="{% static 'medicinequirysite/img/medicine/' %}${ medicine.turu }.png" className="card-img-top" style="color: white; height: 400px; width: 550px;" alt="İLAÇ RESİMİ">`+
+                        '<div className="card-body">'+
+                            `<p className="card-title" style="color: white"><strong>İlaç Adı : </strong>${ medicine.ilac_adi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Etken Madde : </strong>${ medicine.etkin_madde_adi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Firma Adı : </strong>${ medicine.firma_adi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Reçete Türü : </strong>${ medicine.recete_turu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Üretim Yeri : </strong><img src="{% static 'medicinequirysite/img/flags/' %}${ medicine.ithal_imal }" style="height: 30px; width: 30px;" alt="üretim yeri"></p>`+
+                            `<p className="card-text" style="color: white"><strong>Fiyat : </strong>${ medicine.fiyat }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Yaş Aralığı : </strong>${ medicine.yas_araligi }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Cinsiyet : </strong>${ medicine.cinsiyet }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Dozu : </strong>${ medicine.dozu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Türü : </strong>${ medicine.turu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Kullanım Periyodu : </strong>${ medicine.kullanim_periyodu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Kullanılacak Durumlar : </strong><br>${ medicine.kullanimi_durumu }</p>`+
+                            `<p className="card-text" style="color: white"><strong>Nasıl Kullanılır : </strong><br>${ medicine.nasil_kullanilir }</p>`+
+                        '</div>'+
+                    '</div>';
+
+                    sidebar.append(box);
+                    toggleNav();
+                },
+                error: function (error) {
+                    console.error("Veri alınamadı:", error);
+                },
+            });
+        }
+
+        function profile_screen() {
+            window.location.href = '/account/profile/'
+        }
+
+        function login_screen() {
+            window.location.href = '/account/login/'
+        }
+
+        function register_screen() {
+            window.location.href = '/account/register/'
+        }
+
+        document.getElementById("temizle").addEventListener("click", function () {
+            document.getElementById("search").value = "";
+            document.getElementById("drugTypeSelect").value = "0";
+
+            $.ajax({
+                type: 'POST',
+                url: '/account/filter_off/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify('False'),
+            });
+        });
+
+        function search_button() {
+            var veri = { target: document.getElementById('search').value, };
+
+            $.ajax({
+                type: 'POST',
+                url: '/account/medicine_quiry/search/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(veri),
+            });
+            update_view()
+        }
+
+        function select_char(char) {
+            var veri = { target: char, };
+
+            $.ajax({
+                type: 'POST',
+                url: '/account/medicine_quiry/char/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(veri),
+            });
+            update_view()
+        }
+
+        function change_combobox(selectElement) {
+            var veri = { target: selectElement.value, };
+
+            $.ajax({
+                type: 'POST',
+                url: '/account/medicine_quiry/select/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(veri),
+            });
+            update_view()
+        }
+
+        function update_view() {
+            $.ajax({
+                url: "/account/show_result/",
+                method: "GET",
+                dataType: "json",
+                success: function (response) {
+                    var medicine = response.medicineList;
+
+                    var boxContainer = $('#boxContainer');
+                    boxContainer.empty();
+
+                    for (var i = 0; i < medicine.length; i++) {
+                        var box = '<div class="col">' +
+                            '<div class="card h-100 box" onclick="open_box(this)">' +
+                                `<img src="../../static/medicinequirysite/img/medicine/${ medicine[i].turu }.png" class="card-img-top" alt="İLAÇ RESİMİ">` +
+                                '<div class="card-body">' +
+                                    `<h5 class="card-title" id="medicine_name">${ medicine[i].ilac_adi }</h5>` +
+                                    `<h6 class="card-text">Etken Madde : ${ medicine[i].etkin_madde_adi }</h6>` +
+                                    `<h6 class="card-text">Fiyat : ${ medicine[i].fiyat }</h6>` +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+
+                        boxContainer.append(box);
+                    }
+                },
+                error: function (error) {
+                    console.error("Veri alınamadı:", error);
+                },
+            });
+        }
+
+        function toggleNav() {
+            var sidebar = document.getElementById("mySidebar");
+            var toggleBtn = document.getElementById("toggleBtn");
+
+            if (sidebar.style.width === '600px') {
+                sidebar.style.width = '0';
+                toggleBtn.style.right = '15px';
+                toggleBtn.classList.remove('sidebar-open');
+            } else {
+                sidebar.style.width = '600px';
+                toggleBtn.style.right = '615px';
+                toggleBtn.classList.add('sidebar-open');
+            }
+        }
+
+        window.onclick = function (event) {
+            var sidebar = document.getElementById("mySidebar");
+            if (event.target === sidebar) {
+                toggleNav();
+            }
+        }
+    </script>
+</body>
+
+</html>
